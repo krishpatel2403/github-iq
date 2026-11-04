@@ -1,0 +1,61 @@
+# =============================================================================
+# GitHubIQ — Render.com deployment specification
+# =============================================================================
+# Create these on Render:
+# 1. A PostgreSQL database (free tier) — note its Internal Connection String
+# 2. A Web Service (backend) — connect this repo, point to /backend
+# 3. A Web Service (frontend) — connect this repo, point to /frontend
+#
+# Environment variables to set on the Backend service:
+#   DATABASE_URL        = <PostgreSQL Internal Connection String>
+#   GITHUB_CLIENT_ID    = <from GitHub OAuth App>
+#   GITHUB_CLIENT_SECRET = <from GitHub OAuth App>
+#   GITHUB_CALLBACK_URL = https://<backend-service>.onrender.com/api/v1/auth/github/callback
+#   FRONTEND_URL        = https://<frontend-service>.onrender.com
+#   GITHUB_TOKEN_ENCRYPTION_KEY = <fernet key>
+#   SESSION_SECRET_KEY = <random string>
+#   CORS_ORIGINS = https://<frontend-service>.onrender.com
+#   ENVIRONMENT = production
+#
+# Environment variables to set on the Frontend service:
+#   VITE_API_URL = https://<backend-service>.onrender.com
+services:
+  - type: web
+    name: github-iq-backend
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: "cd backend && pip install -r requirements.txt"
+    startCommand: "cd backend && alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: GITHUB_CLIENT_ID
+        sync: false
+      - key: GITHUB_CLIENT_SECRET
+        sync: false
+      - key: GITHUB_CALLBACK_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: GITHUB_TOKEN_ENCRYPTION_KEY
+        sync: false
+      - key: SESSION_SECRET_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: ENVIRONMENT
+        value: production
+      - key: LOG_LEVEL
+        value: INFO
+
+  - type: web
+    name: github-iq-frontend
+    env: node
+    plan: free
+    region: oregon
+    buildCommand: "cd frontend && npm install && npm run build"
+    startCommand: "cd frontend && npx serve -s dist -l $PORT"
+    envVars:
+      - key: VITE_API_URL
+        sync: false

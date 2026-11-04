@@ -1,0 +1,26 @@
+# =============================================================================
+# GitHubIQ — Docker Compose (production-like local run, optional)
+# =============================================================================
+# Usage: docker-compose up --build
+# Requires backend/.env and frontend/.env to be filled in first.
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    volumes:
+      - ./backend:/app
+      - ./backend/data:/app/data
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend
+    restart: unless-stopped

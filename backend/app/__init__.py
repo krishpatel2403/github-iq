@@ -1,0 +1,1 @@
+"""GitHubIQ backend application package."""
