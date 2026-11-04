@@ -2,13 +2,13 @@
 # GitHubIQ — Backend runtime dependencies
 # Pin versions for reproducible builds.
 # =============================================================================
-fastapi==0.115.0
-uvicorn[standard]==0.32.1
-sqlalchemy==2.0.36
-alembic==1.13.1
-pydantic-settings==2.4.0
-authlib==1.3.1
-cryptography==43.0.1
+fastapi==0.162.0
+uvicorn[standard]==0.54.0
+sqlalchemy==2.1.6
+alembic==1.20.1
+pydantic-settings==2.16.2
+authlib==1.9.1
+cryptography==50.0.2
 httpx==0.28.1
-python-dotenv==1.0.1
+python-dotenv==1.2.4
 itsdangerous==2.2.0
